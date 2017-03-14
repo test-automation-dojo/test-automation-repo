@@ -40,10 +40,11 @@ public class Main {
         WebElement toDo = driver.findElement(By.className("new-todo"));
         toDo.sendKeys("Let's get started!");
         toDo.sendKeys(Keys.RETURN);
+
         assertThat(currentCounter(), equalTo("1"));
     }
 
     private String currentCounter() {
-        return driver.findElement(By.xpath("//footer/span/strong")).getText();
+        return driver.findElement(By.cssSelector(".todo-count > strong")).getText();
     }
 }
