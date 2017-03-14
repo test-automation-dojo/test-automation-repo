@@ -38,10 +38,18 @@ public class Main {
         signIn.click();
 
         WebElement toDo = driver.findElement(By.className("new-todo"));
-        toDo.sendKeys("Let's get started!");
+        toDo.sendKeys("buy milk");
         toDo.sendKeys(Keys.RETURN);
 
-        assertThat(currentCounter(), equalTo("1"));
+        WebElement toDo2 = driver.findElement(By.className("new-todo"));
+        toDo2.sendKeys("buy vegemite");
+        toDo2.sendKeys(Keys.RETURN);
+
+        WebElement toDo3 = driver.findElement(By.className("new-todo"));
+        toDo3.sendKeys("make delicious milkshake!");
+        toDo3.sendKeys(Keys.RETURN);
+
+        assertThat(currentCounter(), equalTo("3"));
     }
 
     private String currentCounter() {
