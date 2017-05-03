@@ -1,56 +1,49 @@
 import org.junit.*;
 import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-
-import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
 
-public class Main {
 
-    private static WebDriver driver;
+public class Main {
+    private static Browser browser;
 
     @BeforeClass
     public static void setUpClass() {
-//        System.setProperty("webdriver.chrome.driver", System.getProperty("user.dir") + "/src/test/resources/chromedriver");
-//        driver = new ChromeDriver();
-        driver = new FirefoxDriver();
-        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+        browser = new Browser();
     }
 
     @AfterClass
     public static void tearDownClass() {
-        driver.quit();
+        browser.quit();
     }
 
     @After
     public void tearDown() {
-        ((JavascriptExecutor)driver).executeScript("window.localStorage.clear();");
+        browser.clearLocalStorage();
     }
 
     @Test
     public void shouldAddToDos() throws Exception {
-        driver.get("http://test-automation-dojo.com/todo");
+        browser.navigateTo("http://test-automation-dojo.com/todo");
 
-        WebElement username = driver.findElement(By.id("username"));
-        WebElement password = driver.findElement(By.id("password"));
-        WebElement signIn = driver.findElement(By.id("sign-in"));
+        WebElement username = browser.findElementById("username");
+        WebElement password = browser.findElementById("password");
+        WebElement signIn = browser.findElementById("sign-in");
 
         username.sendKeys("toby");
         password.sendKeys("ninja");
         signIn.click();
 
-        WebElement toDo = driver.findElement(By.className("new-todo"));
+        WebElement toDo = browser.findElementByClass("new-todo");
         toDo.sendKeys("buy milk");
         toDo.sendKeys(Keys.RETURN);
 
-        WebElement toDo2 = driver.findElement(By.className("new-todo"));
+        WebElement toDo2 = browser.findElementByClass("new-todo");
         toDo2.sendKeys("buy vegemite");
         toDo2.sendKeys(Keys.RETURN);
 
-        WebElement toDo3 = driver.findElement(By.className("new-todo"));
+        WebElement toDo3 = browser.findElementByClass("new-todo");
         toDo3.sendKeys("make delicious milkshake!");
         toDo3.sendKeys(Keys.RETURN);
 
@@ -58,21 +51,21 @@ public class Main {
     }
     @Test
     public void addDelete() throws Exception {
-        driver.get("http://test-automation-dojo.com/todo");
+        browser.navigateTo("http://test-automation-dojo.com/todo");
 
-        WebElement username = driver.findElement(By.id("username"));
-        WebElement password = driver.findElement(By.id("password"));
-        WebElement signIn = driver.findElement(By.id("sign-in"));
+        WebElement username = browser.findElementById("username");
+        WebElement password = browser.findElementById("password");
+        WebElement signIn = browser.findElementById("sign-in");
 
         username.sendKeys("toby");
         password.sendKeys("ninja");
         signIn.click();
 
-        WebElement toDo = driver.findElement(By.className("new-todo"));
+        WebElement toDo = browser.findElementByClass("new-todo");
         toDo.sendKeys("buy milk");
         toDo.sendKeys(Keys.RETURN);
 
-        WebElement toDo4 = driver.findElement(By.className("destroy"));
+        WebElement toDo4 = browser.findElementByClass("destroy");
         toDo4.sendKeys("");
         toDo4.click();
 
@@ -82,21 +75,21 @@ public class Main {
 
     @Test
     public void addRemove() throws Exception {
-        driver.get("http://test-automation-dojo.com/todo");
+        browser.navigateTo("http://test-automation-dojo.com/todo");
 
-        WebElement username = driver.findElement(By.id("username"));
-        WebElement password = driver.findElement(By.id("password"));
-        WebElement signIn = driver.findElement(By.id("sign-in"));
+        WebElement username = browser.findElementById("username");
+        WebElement password = browser.findElementById("password");
+        WebElement signIn = browser.findElementById("sign-in");
 
         username.sendKeys("toby");
         password.sendKeys("ninja");
         signIn.click();
 
-        WebElement toDo = driver.findElement(By.className("new-todo"));
+        WebElement toDo = browser.findElementByClass("new-todo");
         toDo.sendKeys("buy milk");
         toDo.sendKeys(Keys.RETURN);
 
-        WebElement toDo4 = driver.findElement(By.className("toggle"));
+        WebElement toDo4 = browser.findElementByClass("toggle");
         toDo4.click();
 
 
@@ -105,18 +98,18 @@ public class Main {
 
     @Test
     public void failedLogin() throws Exception {
-        driver.get("http://test-automation-dojo.com/todo");
+        browser.navigateTo("http://test-automation-dojo.com/todo");
 
-        WebElement username = driver.findElement(By.id("username"));
-        WebElement password = driver.findElement(By.id("password"));
-        WebElement signIn = driver.findElement(By.id("sign-in"));
+        WebElement username = browser.findElementById("username");
+        WebElement password = browser.findElementById("password");
+        WebElement signIn = browser.findElementById("sign-in");
 
         username.sendKeys("toby");
         password.sendKeys("ninja1");
         signIn.click();
 
         try {
-            WebElement toDo = driver.findElement(By.id("error"));
+            WebElement toDo = browser.findElementById("error");
         }catch (NoSuchElementException $e) {
             assertThat("Username/password not correct", true);
         }
@@ -125,22 +118,22 @@ public class Main {
 
     @Test
     public void differentLogins() throws Exception {
-        driver.get("http://test-automation-dojo.com/todo");
+        browser.navigateTo("http://test-automation-dojo.com/todo");
 
-        WebElement username = driver.findElement(By.id("username"));
-        WebElement password = driver.findElement(By.id("password"));
-        WebElement signIn = driver.findElement(By.id("sign-in"));
+        WebElement username = browser.findElementById("username");
+        WebElement password = browser.findElementById("password");
+        WebElement signIn = browser.findElementById("sign-in");
 
         username.sendKeys("kirby");
         password.sendKeys("watermelon");
         signIn.click();
 
-        WebElement signout = driver.findElement(By.id("sign-out"));
+        WebElement signout = browser.findElementById("sign-out");
         signout.click();
 
-        username = driver.findElement(By.id("username"));
-        password = driver.findElement(By.id("password"));
-        signIn = driver.findElement(By.id("sign-in"));
+        username = browser.findElementById("username");
+        password = browser.findElementById("password");
+        signIn = browser.findElementById("sign-in");
 
         username.sendKeys("scruff");
         password.sendKeys("icecream");
@@ -148,6 +141,6 @@ public class Main {
 
     }
     private String currentCounter() {
-        return driver.findElement(By.cssSelector(".todo-count > strong")).getText();
+        return browser.findElementBySelector(".todo-count > strong").getText();
     }
 }
