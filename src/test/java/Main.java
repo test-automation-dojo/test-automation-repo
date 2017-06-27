@@ -1,5 +1,4 @@
 import org.junit.*;
-import org.openqa.selenium.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -7,10 +6,14 @@ import static org.hamcrest.core.IsEqual.equalTo;
 
 public class Main {
     private static Browser browser;
+    private static LoginPageModel loginPage;
+    private static TodoPageModel todoPage;
 
     @BeforeClass
     public static void setUpClass() {
         browser = new Browser();
+        loginPage = new LoginPageModel(browser);
+        todoPage = new TodoPageModel(browser);
     }
 
     @AfterClass
@@ -25,122 +28,43 @@ public class Main {
 
     @Test
     public void shouldAddToDos() throws Exception {
-        browser.navigateTo("http://test-automation-dojo.com/todo");
+        loginPage.navigate();
 
-        WebElement username = browser.findElementById("username");
-        WebElement password = browser.findElementById("password");
-        WebElement signIn = browser.findElementById("sign-in");
+        loginPage.login();
+        todoPage.addTodo("buy milk");
+        todoPage.addTodo("buy vegemite");
+        todoPage.addTodo("make delicious milkshake!");
 
-        username.sendKeys("toby");
-        password.sendKeys("ninja");
-        signIn.click();
-
-        WebElement toDo = browser.findElementByClass("new-todo");
-        toDo.sendKeys("buy milk");
-        toDo.sendKeys(Keys.RETURN);
-
-        WebElement toDo2 = browser.findElementByClass("new-todo");
-        toDo2.sendKeys("buy vegemite");
-        toDo2.sendKeys(Keys.RETURN);
-
-        WebElement toDo3 = browser.findElementByClass("new-todo");
-        toDo3.sendKeys("make delicious milkshake!");
-        toDo3.sendKeys(Keys.RETURN);
-
-        assertThat(currentCounter(), equalTo("3"));
-    }
-    @Test
-    public void addDelete() throws Exception {
-        browser.navigateTo("http://test-automation-dojo.com/todo");
-
-        WebElement username = browser.findElementById("username");
-        WebElement password = browser.findElementById("password");
-        WebElement signIn = browser.findElementById("sign-in");
-
-        username.sendKeys("toby");
-        password.sendKeys("ninja");
-        signIn.click();
-
-        WebElement toDo = browser.findElementByClass("new-todo");
-        toDo.sendKeys("buy milk");
-        toDo.sendKeys(Keys.RETURN);
-
-        WebElement toDo4 = browser.findElementByClass("destroy");
-        toDo4.sendKeys("");
-        toDo4.click();
-
-
-        assertThat(currentCounter(), equalTo("0"));
+        assertThat(todoPage.todoCount(), equalTo(3));
     }
 
     @Test
-    public void addRemove() throws Exception {
-        browser.navigateTo("http://test-automation-dojo.com/todo");
+    public void shouldDeleteTodo() throws Exception {
+        loginPage.navigate();
 
-        WebElement username = browser.findElementById("username");
-        WebElement password = browser.findElementById("password");
-        WebElement signIn = browser.findElementById("sign-in");
+        loginPage.login();
+        todoPage.addTodo("buy milk");
+        todoPage.deleteTodo();
 
-        username.sendKeys("toby");
-        password.sendKeys("ninja");
-        signIn.click();
-
-        WebElement toDo = browser.findElementByClass("new-todo");
-        toDo.sendKeys("buy milk");
-        toDo.sendKeys(Keys.RETURN);
-
-        WebElement toDo4 = browser.findElementByClass("toggle");
-        toDo4.click();
-
-
-        assertThat(currentCounter(), equalTo("0"));
+        assertThat(todoPage.todoCount(), equalTo(0));
     }
 
     @Test
-    public void failedLogin() throws Exception {
-        browser.navigateTo("http://test-automation-dojo.com/todo");
+    public void shouldMarkTodoAsDone() throws Exception {
+        loginPage.navigate();
 
-        WebElement username = browser.findElementById("username");
-        WebElement password = browser.findElementById("password");
-        WebElement signIn = browser.findElementById("sign-in");
+        loginPage.login();
+        todoPage.addTodo("buy milk");
+        todoPage.toggleTodo();
 
-        username.sendKeys("toby");
-        password.sendKeys("ninja1");
-        signIn.click();
-
-        try {
-            WebElement toDo = browser.findElementById("error");
-        }catch (NoSuchElementException $e) {
-            assertThat("Username/password not correct", true);
-        }
-
+        assertThat(todoPage.todoCount(), equalTo(0));
     }
 
     @Test
-    public void differentLogins() throws Exception {
-        browser.navigateTo("http://test-automation-dojo.com/todo");
+    public void shouldShowLoginErrorWhenPasswordIsWrong() throws Exception {
+        loginPage.navigate();
+        loginPage.login("toby", "ninja1");
 
-        WebElement username = browser.findElementById("username");
-        WebElement password = browser.findElementById("password");
-        WebElement signIn = browser.findElementById("sign-in");
-
-        username.sendKeys("kirby");
-        password.sendKeys("watermelon");
-        signIn.click();
-
-        WebElement signout = browser.findElementById("sign-out");
-        signout.click();
-
-        username = browser.findElementById("username");
-        password = browser.findElementById("password");
-        signIn = browser.findElementById("sign-in");
-
-        username.sendKeys("scruff");
-        password.sendKeys("icecream");
-        signIn.click();
-
-    }
-    private String currentCounter() {
-        return browser.findElementBySelector(".todo-count > strong").getText();
+        assertThat(loginPage.loginErrorIsShown(), equalTo(true));
     }
 }
