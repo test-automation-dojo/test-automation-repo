@@ -28,4 +28,10 @@ public class TodoPageModel {
     public int todoCount() {
         return Integer.parseInt(browser.findElementBySelector(".todo-count > strong").getText());
     }
+
+    public void addTodos(String[] todos) {
+        for (String todo : todos) {
+            addTodo(todo);
+        }
+    }
 }
