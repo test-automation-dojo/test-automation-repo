@@ -20,6 +20,10 @@ This setup has the ability to switch browser and browser versions freely and eas
 - Test your docker installation by running `docker run hello-world` in your terminal. If all good, you should see "Hello from Docker!".
 - Spin up the Docker container by running `docker run -d -p 4444:4444 -p 5900:5900 --name docker-selenium-firefox selenium/standalone-firefox-debug` . The container is based on an image which has `Selenium Server`, `Firefox` and `VNC server` installed.
 - Run `docker ps`, you should be able to see `Up XXX time` in the new container's Status.
+- To monitor your test run: 
+- For mac: Find and open "Screen Sharing" in your spotlight
+- For windows: Open your VNC client
+- Enter "vnc://127.0.0.1:5900", if prompted for password, enter "secret"
 
 ### Setup Development IDE
 

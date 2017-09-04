@@ -52,7 +52,7 @@ public class Main {
 
         todoPage.addTodos(supremeIngredients);
 
-        assertThat(todoPage.todoCount(), equalTo(15));
+        assertThat(todoPage.todoCount(), equalTo(14));
     }
 
 
