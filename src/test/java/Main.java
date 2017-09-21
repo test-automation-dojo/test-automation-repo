@@ -13,7 +13,7 @@ public class Main {
     private static TodoPageModel todoPage;
 
     @BeforeClass
-    public static void setUpClass() {
+    public static void setUpClass() throws Exception {
         browser = new Browser();
         loginPage = new LoginPageModel(browser);
         todoPage = new TodoPageModel(browser);
@@ -52,7 +52,7 @@ public class Main {
 
         todoPage.addTodos(supremeIngredients);
 
-        assertThat(todoPage.todoCount(), equalTo(15));
+        assertThat(todoPage.todoCount(), equalTo(14));
     }
 
 
