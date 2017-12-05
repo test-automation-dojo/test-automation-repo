@@ -1,0 +1,18 @@
+version: '3'
+services:
+  application:
+    image: openjdk:8-jdk-slim
+    command: ./gradlew --no-daemon test
+    volumes:
+      - .:/usr/src/myapp
+    environment:
+      BROWSER_HOST: "browser"
+      BROWSER_PORT: "4444"
+    links:
+      - browser
+  browser:
+    image: selenium/standalone-firefox-debug:latest
+    ports:
+      - "4444:4444"
+      - "5900:5900"
+

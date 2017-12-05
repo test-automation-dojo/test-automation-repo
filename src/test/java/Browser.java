@@ -12,15 +12,17 @@ public class Browser {
     private WebDriver driver;
 
     Browser() throws Exception {
-        // To use your local chrome browser to run automated tests, uncomment these lines
-        //  System.setProperty("webdriver.chrome.driver", System.getProperty("user.dir") + "/src/test/resources/chromedriver");
-        //  driver = new ChromeDriver();
+        String host = System.getenv("BROWSER_HOST");
+        String port = System.getenv("BROWSER_PORT");
 
-        // To use your local Firefox browser, uncomment this line
-        //  driver = new FirefoxDriver();
+	if (host == null) {
+	  host = "localhost";
+	}
+	if (port == null) {
+	  host = "4444";
+	}
 
-        // To use Docker based testing environment
-        driver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), DesiredCapabilities.firefox());
+        driver = new RemoteWebDriver(new URL(String.format("http://%s:%s/wd/hub", host, port)), DesiredCapabilities.firefox());
 
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
     }
